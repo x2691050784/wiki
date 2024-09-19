@@ -1,11 +1,14 @@
-package com.xie.wiki;
+package com.xie.wiki.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-
+@ComponentScan("com.xie")//扫描包
+@MapperScan("com.xie.wiki.mapper")
 @SpringBootApplication
 public class WikiApplication {
 
