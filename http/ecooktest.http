@@ -1,4 +1,4 @@
-GET http://localhost:15005/ebook/list?page=1&size=2
+GET http://127.0.0.1:15005/ebook/list?page=1&size=10000
 
 
 ###
