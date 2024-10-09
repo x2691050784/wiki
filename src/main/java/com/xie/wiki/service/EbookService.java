@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -31,7 +30,7 @@ public class EbookService {
     @Resource
     private SnowFlake snowFlake;
 
-    public PageResp<EbookQueryResp> list(@Valid EbookQueryReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
@@ -72,11 +71,6 @@ public class EbookService {
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             ebook.setId(snowFlake.nextId());
-            if(req.getDocCount()==null){
-                ebook.setDocCount(0);
-                ebook.setViewCount(0);
-                ebook.setVoteCount(0);
-            }
             ebookMapper.insert(ebook);
         } else {
             // 更新
@@ -84,9 +78,6 @@ public class EbookService {
         }
     }
 
-    /*
-    删除
-     */
     public void delete(Long id) {
         ebookMapper.deleteByPrimaryKey(id);
     }
