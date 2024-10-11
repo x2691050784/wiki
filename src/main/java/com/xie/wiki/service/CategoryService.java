@@ -29,10 +29,23 @@ public class CategoryService {
 
     @Resource
     private SnowFlake snowFlake;
+    public List<CategoryQueryResp> all() {
+        CategoryExample categoryExample = new CategoryExample();
+        //排序
+        categoryExample.setOrderByClause("sort asc");
+
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+
+        // 列表复制
+        List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+        return list;
+    }
 
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req) {
         CategoryExample categoryExample = new CategoryExample();
-        CategoryExample.Criteria criteria = categoryExample.createCriteria();
+        //排序
+        categoryExample.setOrderByClause("sort asc");
 
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
@@ -41,15 +54,6 @@ public class CategoryService {
         LOG.info("总行数：{}", pageInfo.getTotal());
         LOG.info("总页数：{}", pageInfo.getPages());
 
-        // List<CategoryResp> respList = new ArrayList<>();
-        // for (Category category : categoryList) {
-        //     // CategoryResp categoryResp = new CategoryResp();
-        //     // BeanUtils.copyProperties(category, categoryResp);
-        //     // 对象复制
-        //     CategoryResp categoryResp = CopyUtil.copy(category, CategoryResp.class);
-        //
-        //     respList.add(categoryResp);
-        // }
 
         // 列表复制
         List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
