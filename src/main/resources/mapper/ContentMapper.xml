@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.XZQ.wiki.mapper.DemoMapper">
-  <resultMap id="BaseResultMap" type="com.XZQ.wiki.domain.Demo">
+<mapper namespace="com.XZQ.wiki.mapper.ContentMapper">
+  <resultMap id="BaseResultMap" type="com.XZQ.wiki.domain.Content">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.XZQ.wiki.domain.Content">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,15 +66,20 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`
+    id
   </sql>
-  <select id="selectByExample" parameterType="com.XZQ.wiki.domain.DemoExample" resultMap="BaseResultMap">
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.XZQ.wiki.domain.ContentExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from demo
+    ,
+    <include refid="Blob_Column_List" />
+    from content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -80,85 +87,108 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.XZQ.wiki.domain.ContentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from content
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
-    from demo
+    ,
+    <include refid="Blob_Column_List" />
+    from content
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from demo
+    delete from content
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.XZQ.wiki.domain.DemoExample">
-    delete from demo
+  <delete id="deleteByExample" parameterType="com.XZQ.wiki.domain.ContentExample">
+    delete from content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.XZQ.wiki.domain.Demo">
-    insert into demo (id, `name`)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.XZQ.wiki.domain.Content">
+    insert into content (id, content)
+    values (#{id,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.XZQ.wiki.domain.Demo">
-    insert into demo
+  <insert id="insertSelective" parameterType="com.XZQ.wiki.domain.Content">
+    insert into content
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="name != null">
-        `name`,
+      <if test="content != null">
+        content,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.XZQ.wiki.domain.DemoExample" resultType="java.lang.Long">
-    select count(*) from demo
+  <select id="countByExample" parameterType="com.XZQ.wiki.domain.ContentExample" resultType="java.lang.Long">
+    select count(*) from content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update demo
+    update content
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.name != null">
-        `name` = #{record.name,jdbcType=VARCHAR},
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
       </if>
     </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update content
+    set id = #{record.id,jdbcType=BIGINT},
+      content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update demo
-    set id = #{record.id,jdbcType=BIGINT},
-      `name` = #{record.name,jdbcType=VARCHAR}
+    update content
+    set id = #{record.id,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.XZQ.wiki.domain.Demo">
-    update demo
+  <update id="updateByPrimaryKeySelective" parameterType="com.XZQ.wiki.domain.Content">
+    update content
     <set>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.XZQ.wiki.domain.Demo">
-    update demo
-    set `name` = #{name,jdbcType=VARCHAR}
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.XZQ.wiki.domain.Content">
+    update content
+    set content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

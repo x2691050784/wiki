@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.XZQ.wiki.mapper.DemoMapper">
-  <resultMap id="BaseResultMap" type="com.XZQ.wiki.domain.Demo">
+<mapper namespace="com.XZQ.wiki.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.XZQ.wiki.domain.User">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="CHAR" property="password" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,15 +66,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`
+    id, login_name, `name`, `password`
   </sql>
-  <select id="selectByExample" parameterType="com.XZQ.wiki.domain.DemoExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.XZQ.wiki.domain.UserExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from demo
+    from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -83,56 +85,76 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from demo
+    from user
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from demo
+    delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.XZQ.wiki.domain.DemoExample">
-    delete from demo
+  <delete id="deleteByExample" parameterType="com.XZQ.wiki.domain.UserExample">
+    delete from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.XZQ.wiki.domain.Demo">
-    insert into demo (id, `name`)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.XZQ.wiki.domain.User">
+    insert into user (id, login_name, `name`, 
+      `password`)
+    values (#{id,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{password,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.XZQ.wiki.domain.Demo">
-    insert into demo
+  <insert id="insertSelective" parameterType="com.XZQ.wiki.domain.User">
+    insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
+      <if test="loginName != null">
+        login_name,
+      </if>
       <if test="name != null">
         `name`,
+      </if>
+      <if test="password != null">
+        `password`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="password != null">
+        #{password,jdbcType=CHAR},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.XZQ.wiki.domain.DemoExample" resultType="java.lang.Long">
-    select count(*) from demo
+  <select id="countByExample" parameterType="com.XZQ.wiki.domain.UserExample" resultType="java.lang.Long">
+    select count(*) from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update demo
+    update user
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.loginName != null">
+        login_name = #{record.loginName,jdbcType=VARCHAR},
+      </if>
       <if test="record.name != null">
         `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        `password` = #{record.password,jdbcType=CHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -140,25 +162,35 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update demo
+    update user
     set id = #{record.id,jdbcType=BIGINT},
-      `name` = #{record.name,jdbcType=VARCHAR}
+      login_name = #{record.loginName,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      `password` = #{record.password,jdbcType=CHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.XZQ.wiki.domain.Demo">
-    update demo
+  <update id="updateByPrimaryKeySelective" parameterType="com.XZQ.wiki.domain.User">
+    update user
     <set>
+      <if test="loginName != null">
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=CHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.XZQ.wiki.domain.Demo">
-    update demo
-    set `name` = #{name,jdbcType=VARCHAR}
+  <update id="updateByPrimaryKey" parameterType="com.XZQ.wiki.domain.User">
+    update user
+    set login_name = #{loginName,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

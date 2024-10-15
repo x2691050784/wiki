@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.XZQ.wiki.mapper.EbookSnapshotMapper">
-  <resultMap id="BaseResultMap" type="com.XZQ.wiki.domain.EbookSnapshot">
+<mapper namespace="com.XZQ.wiki.mapper.DocMapper">
+  <resultMap id="BaseResultMap" type="com.XZQ.wiki.domain.Doc">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="ebook_id" jdbcType="BIGINT" property="ebookId" />
-    <result column="date" jdbcType="DATE" property="date" />
+    <result column="parent" jdbcType="BIGINT" property="parent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
     <result column="view_count" jdbcType="INTEGER" property="viewCount" />
     <result column="vote_count" jdbcType="INTEGER" property="voteCount" />
-    <result column="view_increase" jdbcType="INTEGER" property="viewIncrease" />
-    <result column="vote_increase" jdbcType="INTEGER" property="voteIncrease" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,15 +69,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, ebook_id, `date`, view_count, vote_count, view_increase, vote_increase
+    id, ebook_id, parent, `name`, sort, view_count, vote_count
   </sql>
-  <select id="selectByExample" parameterType="com.XZQ.wiki.domain.EbookSnapshotExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.XZQ.wiki.domain.DocExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ebook_snapshot
+    from doc
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -88,29 +88,29 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from ebook_snapshot
+    from doc
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from ebook_snapshot
+    delete from doc
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.XZQ.wiki.domain.EbookSnapshotExample">
-    delete from ebook_snapshot
+  <delete id="deleteByExample" parameterType="com.XZQ.wiki.domain.DocExample">
+    delete from doc
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.XZQ.wiki.domain.EbookSnapshot">
-    insert into ebook_snapshot (id, ebook_id, `date`, 
-      view_count, vote_count, view_increase, 
-      vote_increase)
-    values (#{id,jdbcType=BIGINT}, #{ebookId,jdbcType=BIGINT}, #{date,jdbcType=DATE}, 
-      #{viewCount,jdbcType=INTEGER}, #{voteCount,jdbcType=INTEGER}, #{viewIncrease,jdbcType=INTEGER}, 
-      #{voteIncrease,jdbcType=INTEGER})
+  <insert id="insert" parameterType="com.XZQ.wiki.domain.Doc">
+    insert into doc (id, ebook_id, parent, 
+      `name`, sort, view_count, 
+      vote_count)
+    values (#{id,jdbcType=BIGINT}, #{ebookId,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT}, 
+      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{viewCount,jdbcType=INTEGER}, 
+      #{voteCount,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.XZQ.wiki.domain.EbookSnapshot">
-    insert into ebook_snapshot
+  <insert id="insertSelective" parameterType="com.XZQ.wiki.domain.Doc">
+    insert into doc
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -118,20 +118,20 @@
       <if test="ebookId != null">
         ebook_id,
       </if>
-      <if test="date != null">
-        `date`,
+      <if test="parent != null">
+        parent,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="sort != null">
+        sort,
       </if>
       <if test="viewCount != null">
         view_count,
       </if>
       <if test="voteCount != null">
         vote_count,
-      </if>
-      <if test="viewIncrease != null">
-        view_increase,
-      </if>
-      <if test="voteIncrease != null">
-        vote_increase,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -141,8 +141,14 @@
       <if test="ebookId != null">
         #{ebookId,jdbcType=BIGINT},
       </if>
-      <if test="date != null">
-        #{date,jdbcType=DATE},
+      <if test="parent != null">
+        #{parent,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
       </if>
       <if test="viewCount != null">
         #{viewCount,jdbcType=INTEGER},
@@ -150,22 +156,16 @@
       <if test="voteCount != null">
         #{voteCount,jdbcType=INTEGER},
       </if>
-      <if test="viewIncrease != null">
-        #{viewIncrease,jdbcType=INTEGER},
-      </if>
-      <if test="voteIncrease != null">
-        #{voteIncrease,jdbcType=INTEGER},
-      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.XZQ.wiki.domain.EbookSnapshotExample" resultType="java.lang.Long">
-    select count(*) from ebook_snapshot
+  <select id="countByExample" parameterType="com.XZQ.wiki.domain.DocExample" resultType="java.lang.Long">
+    select count(*) from doc
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update ebook_snapshot
+    update doc
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -173,8 +173,14 @@
       <if test="record.ebookId != null">
         ebook_id = #{record.ebookId,jdbcType=BIGINT},
       </if>
-      <if test="record.date != null">
-        `date` = #{record.date,jdbcType=DATE},
+      <if test="record.parent != null">
+        parent = #{record.parent,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null">
+        sort = #{record.sort,jdbcType=INTEGER},
       </if>
       <if test="record.viewCount != null">
         view_count = #{record.viewCount,jdbcType=INTEGER},
@@ -182,38 +188,38 @@
       <if test="record.voteCount != null">
         vote_count = #{record.voteCount,jdbcType=INTEGER},
       </if>
-      <if test="record.viewIncrease != null">
-        view_increase = #{record.viewIncrease,jdbcType=INTEGER},
-      </if>
-      <if test="record.voteIncrease != null">
-        vote_increase = #{record.voteIncrease,jdbcType=INTEGER},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update ebook_snapshot
+    update doc
     set id = #{record.id,jdbcType=BIGINT},
       ebook_id = #{record.ebookId,jdbcType=BIGINT},
-      `date` = #{record.date,jdbcType=DATE},
+      parent = #{record.parent,jdbcType=BIGINT},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=INTEGER},
       view_count = #{record.viewCount,jdbcType=INTEGER},
-      vote_count = #{record.voteCount,jdbcType=INTEGER},
-      view_increase = #{record.viewIncrease,jdbcType=INTEGER},
-      vote_increase = #{record.voteIncrease,jdbcType=INTEGER}
+      vote_count = #{record.voteCount,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.XZQ.wiki.domain.EbookSnapshot">
-    update ebook_snapshot
+  <update id="updateByPrimaryKeySelective" parameterType="com.XZQ.wiki.domain.Doc">
+    update doc
     <set>
       <if test="ebookId != null">
         ebook_id = #{ebookId,jdbcType=BIGINT},
       </if>
-      <if test="date != null">
-        `date` = #{date,jdbcType=DATE},
+      <if test="parent != null">
+        parent = #{parent,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
       </if>
       <if test="viewCount != null">
         view_count = #{viewCount,jdbcType=INTEGER},
@@ -221,23 +227,17 @@
       <if test="voteCount != null">
         vote_count = #{voteCount,jdbcType=INTEGER},
       </if>
-      <if test="viewIncrease != null">
-        view_increase = #{viewIncrease,jdbcType=INTEGER},
-      </if>
-      <if test="voteIncrease != null">
-        vote_increase = #{voteIncrease,jdbcType=INTEGER},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.XZQ.wiki.domain.EbookSnapshot">
-    update ebook_snapshot
+  <update id="updateByPrimaryKey" parameterType="com.XZQ.wiki.domain.Doc">
+    update doc
     set ebook_id = #{ebookId,jdbcType=BIGINT},
-      `date` = #{date,jdbcType=DATE},
+      parent = #{parent,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
       view_count = #{viewCount,jdbcType=INTEGER},
-      vote_count = #{voteCount,jdbcType=INTEGER},
-      view_increase = #{viewIncrease,jdbcType=INTEGER},
-      vote_increase = #{voteIncrease,jdbcType=INTEGER}
+      vote_count = #{voteCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
